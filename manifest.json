@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Hello World Extension",
+  "name": "Viper",
   "version": "1.0",
-  "description": "Just says Hello World!",
+  "description": "A Game inspired by the nokia snake game.",
   "action": {
     "default_popup": "popup.html"
   }
