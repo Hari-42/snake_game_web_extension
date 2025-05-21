@@ -3,7 +3,17 @@
   "name": "Viper",
   "version": "1.0",
   "description": "A Game inspired by the nokia snake game.",
+  "icons": {
+    "16": "snakegameicon.png",
+    "48": "snakegameicon.png",
+    "128": "snakegameicon.png"
+  },
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "snakegameicon.png",
+      "48": "snakegameicon.png",
+      "128": "snakegameicon.png"
+    }
   }
 }
