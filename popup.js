@@ -1,6 +1,7 @@
 const menu = document.getElementById('menu');
 const game = document.getElementById('game');
 const startBtn = document.getElementById('startBtn');
+const scoreBoard = document.getElementById('scoreBoard');
 
 startBtn.addEventListener('click', () => {
     menu.style.display = 'none';
@@ -16,8 +17,8 @@ function startSnakeGame() {
     let snake = [{ x: 140, y: 140 }];
     let dx = box;
     let dy = 0;
-
     let food = randomFood();
+    let score = 0;
 
     document.addEventListener('keydown', changeDirection);
 
@@ -52,6 +53,8 @@ function startSnakeGame() {
         if (head.x === food.x && head.y === food.y) {
             snake.unshift(head);
             food = randomFood();
+            score++;
+            scoreBoard.textContent = `Score: ${score}`;
         } else {
             snake.unshift(head);
             snake.pop();
@@ -63,10 +66,17 @@ function startSnakeGame() {
         ctx.fillStyle = 'yellow';
         ctx.fillRect(food.x, food.y, box, box);
 
-        ctx.fillStyle = 'lime';
         for (let segment of snake) {
+            ctx.fillStyle = 'lime';
             ctx.fillRect(segment.x, segment.y, box, box);
+            ctx.strokeStyle = '#064420';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(segment.x, segment.y, box, box);
         }
+
+        ctx.fillStyle = 'white';
+        ctx.font = '16px Arial';
+        ctx.fillText(`Score: ${score}`, 10, 20);
     }
 
     setInterval(gameLoop, 150);
