@@ -17,6 +17,8 @@ function startSnakeGame() {
     let dx = box;
     let dy = 0;
 
+    let food = randomFood();
+
     document.addEventListener('keydown', changeDirection);
 
     function changeDirection(e) {
@@ -32,6 +34,13 @@ function startSnakeGame() {
         }
     }
 
+    function randomFood() {
+        return {
+            x: Math.floor(Math.random() * (canvasSize / box)) * box,
+            y: Math.floor(Math.random() * (canvasSize / box)) * box,
+        };
+    }
+
     function gameLoop() {
         const head = { x: snake[0].x + dx, y: snake[0].y + dy };
 
@@ -40,12 +49,19 @@ function startSnakeGame() {
         if (head.y >= canvasSize) head.y = 0;
         else if (head.y < 0) head.y = canvasSize - box;
 
-        snake.unshift(head);
-        snake.pop();
+        if (head.x === food.x && head.y === food.y) {
+            snake.unshift(head);
+            food = randomFood();
+        } else {
+            snake.unshift(head);
+            snake.pop();
+        }
 
-        // Draw background
         ctx.fillStyle = '#000';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = 'yellow';
+        ctx.fillRect(food.x, food.y, box, box);
 
         ctx.fillStyle = 'lime';
         for (let segment of snake) {
