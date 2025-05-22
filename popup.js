@@ -1,12 +1,22 @@
 const menu = document.getElementById('menu');
 const game = document.getElementById('game');
+const gameOverScreen = document.getElementById('gameOver');
 const startBtn = document.getElementById('startBtn');
+const retryBtn = document.getElementById('retryBtn');
 const scoreBoard = document.getElementById('scoreBoard');
+const finalScore = document.getElementById('finalScore');
 
 startBtn.addEventListener('click', () => {
     menu.style.display = 'none';
+    gameOverScreen.style.display = 'none';
     game.style.display = 'flex';
     startSnakeGame();
+});
+
+retryBtn.addEventListener('click', () => {
+    gameOverScreen.style.display = 'none';
+    menu.style.display = 'flex';
+    scoreBoard.textContent = '';
 });
 
 function startSnakeGame() {
@@ -19,6 +29,7 @@ function startSnakeGame() {
     let dy = 0;
     let food = randomFood();
     let score = 0;
+    let gameInterval;
 
     document.addEventListener('keydown', changeDirection);
 
@@ -42,19 +53,37 @@ function startSnakeGame() {
         };
     }
 
+    function endGame() {
+        clearInterval(gameInterval);
+        game.style.display = 'none';
+        gameOverScreen.style.display = 'flex';
+        finalScore.textContent = `Score: ${score}`;
+    }
+
+    function checkSelfCollision(head) {
+        return snake.some((segment, index) => {
+            return index !== 0 && segment.x === head.x && segment.y === head.y;
+        });
+    }
+
     function gameLoop() {
         const head = { x: snake[0].x + dx, y: snake[0].y + dy };
 
+        // Wrap around the edges
         if (head.x >= canvasSize) head.x = 0;
         else if (head.x < 0) head.x = canvasSize - box;
         if (head.y >= canvasSize) head.y = 0;
         else if (head.y < 0) head.y = canvasSize - box;
 
+        if (checkSelfCollision(head)) {
+            endGame();
+            return;
+        }
+
         if (head.x === food.x && head.y === food.y) {
             snake.unshift(head);
             food = randomFood();
             score++;
-            scoreBoard.textContent = `Score: ${score}`;
         } else {
             snake.unshift(head);
             snake.pop();
@@ -79,5 +108,5 @@ function startSnakeGame() {
         ctx.fillText(`Score: ${score}`, 10, 20);
     }
 
-    setInterval(gameLoop, 150);
+    gameInterval = setInterval(gameLoop, 150);
 }
