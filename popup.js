@@ -5,6 +5,11 @@ const startBtn = document.getElementById('startBtn');
 const retryBtn = document.getElementById('retryBtn');
 const scoreBoard = document.getElementById('scoreBoard');
 const finalScore = document.getElementById('finalScore');
+const highScoreDisplay = document.getElementById('highScore');
+
+// Load high score from localStorage
+let highScore = localStorage.getItem('highScore') || 0;
+highScoreDisplay.textContent = `High Score: ${highScore}`;
 
 startBtn.addEventListener('click', () => {
     menu.style.display = 'none';
@@ -17,6 +22,7 @@ retryBtn.addEventListener('click', () => {
     gameOverScreen.style.display = 'none';
     menu.style.display = 'flex';
     scoreBoard.textContent = '';
+    highScoreDisplay.textContent = `High Score: ${highScore}`;
 });
 
 function startSnakeGame() {
@@ -55,9 +61,16 @@ function startSnakeGame() {
 
     function endGame() {
         clearInterval(gameInterval);
+
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('highScore', highScore);
+        }
+
         game.style.display = 'none';
         gameOverScreen.style.display = 'flex';
         finalScore.textContent = `Score: ${score}`;
+        highScoreDisplay.textContent = `High Score: ${highScore}`;
     }
 
     function checkSelfCollision(head) {
@@ -69,7 +82,7 @@ function startSnakeGame() {
     function gameLoop() {
         const head = { x: snake[0].x + dx, y: snake[0].y + dy };
 
-        // Wrap around the edges
+        // Wrap around edges
         if (head.x >= canvasSize) head.x = 0;
         else if (head.x < 0) head.x = canvasSize - box;
         if (head.y >= canvasSize) head.y = 0;
